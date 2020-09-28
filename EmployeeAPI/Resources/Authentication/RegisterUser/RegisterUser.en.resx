@@ -132,6 +132,9 @@
   <data name="Login" xml:space="preserve">
     <value>Login</value>
   </data>
+  <data name="LoginNameRequired" xml:space="preserve">
+    <value>The login must not be empty</value>
+  </data>
   <data name="Password" xml:space="preserve">
     <value>Password</value>
   </data>
@@ -140,8 +143,5 @@
   </data>
   <data name="PasswordRequired" xml:space="preserve">
     <value>The password must not be empty</value>
-  </data>
-  <data name="UserNameRequired" xml:space="preserve">
-    <value>The login must not be empty</value>
   </data>
 </root>

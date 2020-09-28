@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 
 namespace EmployeeAPI.Authentication
 {
     public class RegisterUser
     {
-        [Required(ErrorMessage = "UserNameRequired")]
+        [Required(ErrorMessage = "LoginNameRequired")]
         [Display(Name = "Login")]
         public string Login { get; set; }
 

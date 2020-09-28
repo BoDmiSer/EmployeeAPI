@@ -1,17 +1,14 @@
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
+using AutoMapper;
+using EmployeeAPI.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Localization;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace EmployeeAPI
 {
@@ -28,8 +25,13 @@ namespace EmployeeAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddLocalization(options => options.ResourcesPath = "Resources");
+            services.AddDbContextPool<ApplicationUserDbContext>(opt => opt.UseMySql(Configuration.GetConnectionString("ApplicationUserDbContext")));
             services.AddControllersWithViews().AddDataAnnotationsLocalization();
             services.AddControllers();
+            services.AddCors();
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            services.AddScoped<IEmployeeRepository, MySQLEmployeeRepository>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,7 +53,9 @@ namespace EmployeeAPI
                 SupportedCultures = supportedCultures,
                 SupportedUICultures = supportedCultures
             });
-
+            app.UseCors(builder => builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader());
             app.UseHttpsRedirection();
 
             app.UseRouting();
