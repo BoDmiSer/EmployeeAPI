@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EmployeeAPI.Authentication;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -46,6 +47,8 @@ namespace EmployeeAPI.Models
 
         public int CompanyId { get; set; }
         public Company Company { get; set; }
+
+        public User Identity { get; set; }
         #endregion  
     }
 }
