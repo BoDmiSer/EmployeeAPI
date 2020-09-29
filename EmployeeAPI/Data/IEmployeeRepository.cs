@@ -1,4 +1,5 @@
 ﻿using EmployeeAPI.Models;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,15 +7,15 @@ using System.Threading.Tasks;
 
 namespace EmployeeAPI.Data
 {
-    interface IEmployeeRepository
+    public interface IEmployeeRepository
     {
         bool SaveChanges();
-        IEnumerable<Employee> GetAllEmployee();
+        Task<ActionResult<IEnumerable<Employee>>> GetAllEmployee();
         IEnumerable<Employee> GetEmployeeByTitle(string title);
-        Employee GetEmployeeById(long id);
-        void CreateEmployee(Employee tutorial);
-        void UpdateEmployee(Employee tutorial);
-        void DeleteEmploeey(Employee tutorial);
+        Task<ActionResult<Employee>> GetEmployeeById(int id);
+        Task<ActionResult<Employee>> CreateEmployee(Employee tutorial);
+        Task<IActionResult> UpdateEmployee(Employee tutorial);
+        Task<ActionResult<Employee>> DeleteEmploeey(int id);
         void DeleteAllEmployee(IEnumerable<Employee> employee);
     }
 }

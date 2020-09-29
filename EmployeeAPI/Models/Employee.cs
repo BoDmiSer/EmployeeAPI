@@ -6,6 +6,7 @@ namespace EmployeeAPI.Models
 {
     public class Employee
     {
+       
         #region Properties
         [Required(ErrorMessage = "IdRequired")]
         public int EmployeeId { get; set; }

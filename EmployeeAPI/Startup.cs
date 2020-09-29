@@ -25,12 +25,15 @@ namespace EmployeeAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddLocalization(options => options.ResourcesPath = "Resources");
+            //services.AddDbContext<ApplicationUserDbContext>(opt => opt.UseInMemoryDatabase("ApplicationUserDbContext"));
             services.AddDbContextPool<ApplicationUserDbContext>(opt => opt.UseMySql(Configuration.GetConnectionString("ApplicationUserDbContext")));
             services.AddControllersWithViews().AddDataAnnotationsLocalization();
             services.AddControllers();
             services.AddCors();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddScoped<IEmployeeRepository, MySQLEmployeeRepository>();
+            //services.AddScoped<IEmployeeRepository, MockEmployeeRepository>();
+
 
         }
 

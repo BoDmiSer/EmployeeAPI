@@ -1,4 +1,6 @@
 ﻿using EmployeeAPI.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,13 +17,16 @@ namespace EmployeeAPI.Data
             _context = context;
         }
 
-        public void CreateEmployee(Employee employee)
+        public async Task<ActionResult<Employee>> CreateEmployee(Employee employee)
         {
             if (employee == null)
             {
                 throw new ArgumentNullException(nameof(employee));
             }
             _context.Employees.Add(employee);
+            await _context.SaveChangesAsync();
+            return  employee;
+
         }
 
         public void DeleteAllEmployee(IEnumerable<Employee> employee)
@@ -33,23 +38,28 @@ namespace EmployeeAPI.Data
             _context.Employees.RemoveRange(employee);
         }
 
-        public void DeleteEmploeey(Employee employee)
+        public async Task<ActionResult<Employee>> DeleteEmploeey(int id)
         {
+            var employee = await _context.Employees.FindAsync(id);
             if (employee == null)
             {
                 throw new ArgumentNullException(nameof(employee));
             }
             _context.Employees.Remove(employee);
+            await _context.SaveChangesAsync();
+
+            return employee;
         }
 
-        public IEnumerable<Employee> GetAllEmployee()
+        public async Task<ActionResult<IEnumerable<Employee>>> GetAllEmployee()
         {
-            return _context.Employees.ToList();
+            return await _context.Employees.ToListAsync();
         }
 
-        public Employee GetEmployeeById(long id)
+        public async Task<ActionResult<Employee>> GetEmployeeById(int id)
         {
-            return _context.Employees.FirstOrDefault(k => k.EmployeeId == id);
+            var employee = await _context.Employees.FindAsync(id);
+            return employee;
         }
 
         public IEnumerable<Employee> GetEmployeeByTitle(string title)
@@ -62,9 +72,11 @@ namespace EmployeeAPI.Data
             return (_context.SaveChanges() >= 0);
         }
 
-        public void UpdateEmployee(Employee employee)
+        public async Task<IActionResult> UpdateEmployee(Employee employee)
         {
-            //throw new NotImplementedException();
+            _context.Entry(employee).State = EntityState.Modified;
+           await _context.SaveChangesAsync();
+            return null;
         }
     }
 }
