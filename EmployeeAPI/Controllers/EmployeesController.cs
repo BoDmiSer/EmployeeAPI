@@ -7,28 +7,39 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using EmployeeAPI.Data;
 using EmployeeAPI.Models;
+using Microsoft.AspNetCore.Authorization;
+using EmployeeAPI.Authentication;
+using EmployeeAPI.ViewModel;
+using AutoMapper;
+using EmployeeAPI.Dtos;
 
 namespace EmployeeAPI.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class EmployeesController : ControllerBase
     {
         private readonly ApplicationUserDbContext _context;
         private readonly IEmployeeRepository _repo;
+        private readonly IMapper _mapper;
 
 
-        public EmployeesController(IEmployeeRepository repository, ApplicationUserDbContext context)
+        public EmployeesController(IEmployeeRepository repository, ApplicationUserDbContext context, IMapper mapper)
         {
             _repo = repository;
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/Employees
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Employee>>> GetEmployees()
+        public ActionResult<PageDto> GetEmployees(int page = 0, int size = 4)
         {
-            return await _repo.GetAllEmployee();
+            PageListViewModel<Employee> pageListView;
+            pageListView = PageListViewModel<Employee>.Create(_context.Employees.ToList(), page, size);
+
+            return Ok(_mapper.Map<PageDto>(pageListView));
         }
 
         // GET: api/Employees/5
@@ -46,6 +57,7 @@ namespace EmployeeAPI.Controllers
         // PUT: api/Employees/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        //[Authorize(Roles = UserRoles.Admin + "," + UserRoles.Moderator)]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutEmployee(int id, Employee employee)
         {
@@ -82,6 +94,7 @@ namespace EmployeeAPI.Controllers
         }
 
         // DELETE: api/Employees/5
+        //[Authorize(Roles = UserRoles.Admin)]
         [HttpDelete("{id}")]
         public async Task<ActionResult<Employee>> DeleteEmployee(int id)
         {
